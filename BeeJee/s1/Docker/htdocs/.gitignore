@@ -1,0 +1,7 @@
+/.env
+/var/
+/vendor/
+/.web-server-pid
+/node_modules/
+npm-debug.log
+yarn-error.log
