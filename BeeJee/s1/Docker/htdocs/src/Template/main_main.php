@@ -44,7 +44,7 @@
             $.post( "/Auth/check/", { func: "getNameAndTime" }, function( data ) {
                 MainClass.config.auth = data.checkSession;
                 if (!MainClass.config.auth) {
-                    DevExpress.ui.notify("Авторизируйтесь", "warning", 1500);
+                    DevExpress.ui.notify("Вы не авторизированы", "info", 1500);
                 }
 
             }, "json");
@@ -110,6 +110,9 @@
             console.log(eventName);
         }
 
+        $("#popupContainer").dxPopup({
+            title: "Popup Auth"
+        });
 
 
         $("#gridContainer").dxDataGrid({
@@ -220,6 +223,7 @@
                 e.cancel = !MainClass.config.auth;
                 logEvent("RowInserting");
                 if (e.cancel) {
+                    $("#popupContainer").dxPopup( { visible: true , fullScreen:true, showCloseButton:false});
                     DevExpress.ui.notify("НЕ Добавлено", "warning", 500);
                 } else {
                     DevExpress.ui.notify("Добавлено в конец списка", "warning", 500);
@@ -233,18 +237,48 @@
             onRowUpdating: function (e) {
                 MainClass.session();
                 logEvent("RowUpdating");
+                e.cancel = !MainClass.config.auth;
+                if (e.cancel) {
+                    $("#popupContainer").dxPopup( { visible: true , fullScreen:true, showCloseButton:false});
+                    DevExpress.ui.notify("НЕ Добавлено", "warning", 500);
+                } else {
+                    DevExpress.ui.notify("Выполнено", "warning", 500);
+                }
             },
             onRowUpdated: function (e) {
                 MainClass.session();
                 MainClass.rowUpdated(e)
                 logEvent("RowUpdated");
+                e.cancel = !MainClass.config.auth;
+                if (e.cancel) {
+                    $("#popupContainer").dxPopup( { visible: true , fullScreen:true, showCloseButton:false});
+                    DevExpress.ui.notify("НЕ Выполнено", "warning", 500);
+                } else {
+                    DevExpress.ui.notify("Выполнено", "warning", 500);
+                }
             },
             onRowRemoving: function (e) {
                 MainClass.session();
                 logEvent("RowRemoving");
+                e.cancel = !MainClass.config.auth;
+                if (e.cancel) {
+                    $("#popupContainer").dxPopup( { visible: true , fullScreen:true, showCloseButton:false});
+                    DevExpress.ui.notify("НЕ Выполнено", "warning", 500);
+                } else {
+                    DevExpress.ui.notify("Выполнено", "warning", 500);
+                }
             },
             onRowRemoved: function (e) {
                 MainClass.session();
+
+                e.cancel = !MainClass.config.auth;
+                if (e.cancel) {
+                   // $("#popupContainer").dxPopup("show");
+                    $("#popupContainer").dxPopup( { visible: true , fullScreen:true, showCloseButton:false});
+                    DevExpress.ui.notify("НЕ Выполнено", "warning", 500);
+                } else {
+                    DevExpress.ui.notify("Выполнено", "warning", 500);
+                }
                 MainClass.rowRemoved(e)
                 logEvent("RowRemoved");
             }
@@ -255,4 +289,8 @@
     <div class="demo-container">
         <div id="gridContainer"></div>
     </div>
+</div>
+
+<div id="popupContainer">
+    <center><p> Перейдите на форму авторизации  <a href="/Auth/login/">  тут </a> </p></center>
 </div>

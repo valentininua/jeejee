@@ -29,6 +29,10 @@ class MainController extends Controller
         $this->service = new IndexService();
     }
 
+    private function checkSession()
+    {
+        return $_SESSION["auth"][0]['id']?true:false;
+    }
 
     public function main()
     {
@@ -50,27 +54,27 @@ class MainController extends Controller
 
     public function rowInserted()
     {
-//        if (!$this->checkSession()) {
-//            return $this->renderJson(['session' => 'exit']);
-//        }
+        if ($this->checkSession()) {
+            return $this->renderJson(['session' => 'exit']);
+        }
         $rawData = json_decode(file_get_contents("php://input"));
         return $this->repository->rowInserted($rawData);
     }
 
     public function rowRemoved()
     {
-//        if (!$this->checkSession()) {
-//            return $this->renderJson(['session' => 'exit']);
-//        }
+        if ($this->checkSession()) {
+            return $this->renderJson(['session' => 'exit']);
+        }
         $rawData = json_decode(file_get_contents("php://input"));
         return $this->repository->rowRemoved($rawData);
     }
 
     public function rowUpdated()
     {
-//        if (!$this->checkSession()) {
-//            return $this->renderJson(['session' => 'exit']);
-//        }
+        if ($this->checkSession()) {
+            return $this->renderJson(['session' => 'exit']);
+        }
         $rawData = json_decode(file_get_contents("php://input"));
         return $this->repository->rowIfEditUpdated($rawData);
     }
