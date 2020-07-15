@@ -106,7 +106,6 @@ class IndexRepository
         $stmt= $this->db->prepare($sql);
         $stmt->execute($data);
         return;
-
     }
 
 

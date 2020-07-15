@@ -9,4 +9,7 @@ return array(
     '/ajax/CheckUniqueEmailAddress' => "MainController::checkUniqueEmailAddress",
     '/Auth/login/' => "AuthController::login",
     '/Auth/logout/' => "AuthController::logout",
+    '/Auth/logout/' => "AuthController::logout",
+    '/Auth/check/' => "AuthController::checkSession",
+
 );

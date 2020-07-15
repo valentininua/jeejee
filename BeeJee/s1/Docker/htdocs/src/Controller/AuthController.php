@@ -48,6 +48,11 @@ class AuthController extends Controller
         }
     }
 
+    public function checkSession()
+    {
+        return $this->renderJson(['checkSession' => $_SESSION["auth"][0]['id']?true:false]);
+    }
+
     public function logout ()
     {
         session_destroy();

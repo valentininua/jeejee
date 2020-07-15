@@ -39,6 +39,16 @@
                 "id": 5, "name": "Завершенный"
             }
         ],
+        session: function(){
+            //MainClass.config.auth = true
+            $.post( "/Auth/check/", { func: "getNameAndTime" }, function( data ) {
+                MainClass.config.auth = data.checkSession;
+                if (!MainClass.config.auth) {
+                    DevExpress.ui.notify("Авторизируйтесь", "warning", 1500);
+                }
+
+            }, "json");
+        },
         rowUpdated: function(params) {
             console.log(params);
             return $.ajax({
@@ -68,7 +78,8 @@
                     Name: params.data.Name,
                     Status: params.data.Status,
                     Task: params.data.Task,
-                })
+                }),
+
             });
         },
         rowRemoved: function(params) {
@@ -86,6 +97,7 @@
                     Task: params.data.Task,
                 })
             });
+
         },
     }
 
@@ -97,6 +109,8 @@
         function logEvent(eventName) {
             console.log(eventName);
         }
+
+
 
         $("#gridContainer").dxDataGrid({
             dataSource: MainClass.customers,
@@ -110,7 +124,7 @@
                 mode: "row",
                 allowUpdating: MainClass.config.auth, // if  admin => true
                 allowDeleting: MainClass.config.auth, // if  admin => true
-                allowAdding: true
+                allowAdding: MainClass.config.auth,   // true
             },
             pager: {
                 showPageSizeSelector: true,
@@ -140,6 +154,7 @@
                         type: "async",
                         message: "Email address is not unique",
                         validationCallback: function (params) {
+                            MainClass.session();
                             return $.ajax({
                                 url: "/ajax/CheckUniqueEmailAddress",
                                 type: 'POST',
@@ -178,6 +193,7 @@
                             caption: '',
                             allowEditing: false, //config.auth, //false, // if admin == true
                             calculateDisplayValue: function (rowData) { // combines display values
+                                MainClass.session();
                                 if (1 == rowData.Edited) {
                                     return "отредактировано администратором";
                                 } else {
@@ -192,30 +208,43 @@
                 }
             ],
             onEditingStart: function (e) {
+                MainClass.session();
                 logEvent("EditingStart");
             },
             onInitNewRow: function (e) {
+                MainClass.session();
                 logEvent("InitNewRow");
             },
             onRowInserting: function (e) {
+                MainClass.session();
+                e.cancel = !MainClass.config.auth;
                 logEvent("RowInserting");
-                DevExpress.ui.notify("Добавлено в конец списка", "warning", 500);
+                if (e.cancel) {
+                    DevExpress.ui.notify("НЕ Добавлено", "warning", 500);
+                } else {
+                    DevExpress.ui.notify("Добавлено в конец списка", "warning", 500);
+                }
             },
             onRowInserted: function (e) {
+                MainClass.session();
                 MainClass.rowInserted(e)
                 logEvent("RowInserted");
             },
             onRowUpdating: function (e) {
+                MainClass.session();
                 logEvent("RowUpdating");
             },
             onRowUpdated: function (e) {
+                MainClass.session();
                 MainClass.rowUpdated(e)
                 logEvent("RowUpdated");
             },
             onRowRemoving: function (e) {
+                MainClass.session();
                 logEvent("RowRemoving");
             },
             onRowRemoved: function (e) {
+                MainClass.session();
                 MainClass.rowRemoved(e)
                 logEvent("RowRemoved");
             }

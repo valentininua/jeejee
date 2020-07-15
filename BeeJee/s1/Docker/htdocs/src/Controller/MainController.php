@@ -29,6 +29,7 @@ class MainController extends Controller
         $this->service = new IndexService();
     }
 
+
     public function main()
     {
         return $this->render('main_main.php', [
@@ -49,20 +50,29 @@ class MainController extends Controller
 
     public function rowInserted()
     {
+//        if (!$this->checkSession()) {
+//            return $this->renderJson(['session' => 'exit']);
+//        }
         $rawData = json_decode(file_get_contents("php://input"));
         return $this->repository->rowInserted($rawData);
     }
 
     public function rowRemoved()
     {
+//        if (!$this->checkSession()) {
+//            return $this->renderJson(['session' => 'exit']);
+//        }
         $rawData = json_decode(file_get_contents("php://input"));
         return $this->repository->rowRemoved($rawData);
     }
 
     public function rowUpdated()
     {
-         $rawData = json_decode(file_get_contents("php://input"));
-         return $this->repository->rowIfEditUpdated($rawData);
+//        if (!$this->checkSession()) {
+//            return $this->renderJson(['session' => 'exit']);
+//        }
+        $rawData = json_decode(file_get_contents("php://input"));
+        return $this->repository->rowIfEditUpdated($rawData);
     }
 
 }
